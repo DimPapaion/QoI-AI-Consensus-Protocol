@@ -23,13 +23,13 @@ class CustomDatasets(object):
 
     """
 
-    def __init__(self, config):
-        self.path = config['path']
-        self.target_type = config['target_type']
-        self.dataset_name = config['dataset_name']
-        self.batch_size = config['batch_size']
-        self.n_classes = config['n_classes']
-        self.transform_img = config['transform']
+    def __init__(self, args):
+        self.path = args.path
+        self.target_type = args.target_type
+        self.dataset_name = args.dataset_name
+        self.batch_size = args.batch_size
+        self.n_classes = args.n_classes
+        self.transform_img = args.transform
         self.dataset = None
 
     def _load_Dataset(self):

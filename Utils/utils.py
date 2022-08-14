@@ -1,6 +1,9 @@
 import torch
 from sklearn.metrics import average_precision_score
 
+import Datasets.Datasets
+from Datasets import *
+
 def get_default_device():
   if torch.cuda.is_available():
     print("Run on Cuda")
@@ -33,3 +36,9 @@ def some_infos(loader):
     real_label = torch.max(target, 1)[1].data.squeeze()
     print("Batch Labels:  " , real_label)
     break
+
+def build_dataset(args):
+  CD = Datasets.Datasets.CustomDatasets(args)
+  dataset = CD._load_Dataset()
+  loaders = CD.make_loaders()
+  return dataset, loaders

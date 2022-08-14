@@ -4,8 +4,8 @@ from torchvision.utils import make_grid
 import numpy as np
 
 
-def show_Image(dataset, dataset_name, dataset_type, num, preds):
-    if dataset_type == "SVHN":
+def show_Image(args,dataset, num, preds):
+    if args.dataset_name == "SVHN":
         y_true = dataset.labels[num]
         plt.imshow(dataset.data[num].T)
     else:
@@ -13,13 +13,13 @@ def show_Image(dataset, dataset_name, dataset_type, num, preds):
 
         plt.imshow(dataset.data[num])
     if preds is None:
-        if dataset_name == "SVHN":
+        if args.dataset_name == "SVHN":
             plt.title('True Label: {}'.format(y_true))
         else:
             plt.title('True Label: {}'.format(dataset.classes[y_true]))
     else:
         predicted = preds[num]
-        if dataset_name == "SVHN":
+        if args.dataset_name == "SVHN":
             plt.title('True Label: {} \n Predicted Label: {}'.format(y_true,
                                                                      dataset.classes[predicted]))
         else:
