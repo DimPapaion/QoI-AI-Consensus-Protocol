@@ -99,7 +99,7 @@ class BaseClassifier(object):
             for data, target in tqdm(self.valid_loader):
                 # target = target.float()
                 data, target = data.to(self.device), target.to(self.device)
-                output = model(data)
+                output = self.model(data)
 
                 loss = self.criterion(output, target)
 
