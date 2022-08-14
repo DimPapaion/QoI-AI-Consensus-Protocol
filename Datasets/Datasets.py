@@ -7,7 +7,7 @@ from torchvision.transforms import transforms
 class CustomDatasets(object):
     """
     CustomDatasets is a multi class object supporting the following datasets: F-Mnist, SVHN,
-    Cifar-10 and 100, STL-10 and Caltech 101-256.
+    Cifar-10 and 100, STL-1 and Caltech 101-256.
 
     Augmentations for each dataset is provided in the _load_Dataset function as well as a
     transformation of the target labels to one-hot-encoding (OHE) if is required.
@@ -16,7 +16,7 @@ class CustomDatasets(object):
     - Path: the path in which the dataset is storted or externally provided via torchvision datasets.
     - target_type: None and OHE. If none is selected then no transformation is applied in labels,
                 if Ohe then OHE transformation is applied in labels.
-    - dataset_name: str argument "MNIST", "F-MNIST", "CIFAR10", "CIFAR100", "SVHN", "STL-10", "CALTECH101" and "CALTECH256".
+    - dataset_name: str argument "MNIST", "F-MNIST", "CIFAR10", "CIFAR100", "SVHN", "STL-1", "CALTECH101" and "CALTECH256".
     - batch_size: The desired batch size.
     - n_classes: Number of classes for the selected dataset.
     -transform_img: True, False if augmentations should be applied or not.
@@ -60,7 +60,7 @@ class CustomDatasets(object):
                     transforms.ToTensor(),
                     transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)),
                 ])
-        elif self.dataset_name == "STL-10":
+        elif self.dataset_name == "STL-1":
             if self.transform_img:
                 transform_train = transforms.Compose([
                     transforms.RandomCrop(96, padding=4),
@@ -131,7 +131,7 @@ class CustomDatasets(object):
                 "Test": torchvision.datasets.SVHN(root=self.path, split='test', transform=transform_test, download=True,
                                                   target_transform=target_trans)}
 
-        elif self.dataset_name == "STL-10":
+        elif self.dataset_name == "STL-1":
             self.dataset = {
                 "Train": torchvision.datasets.STL10(root=self.path, transform=transform_train, split="train",
                                                     download=True, target_transform=target_trans),
