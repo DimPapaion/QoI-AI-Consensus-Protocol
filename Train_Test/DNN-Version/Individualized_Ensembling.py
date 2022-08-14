@@ -1,10 +1,11 @@
 from BaseTraining import VotingClassifier
+from Train_Test.Synthetic_Version.Voting_Ensemble import *
 import numpy as np
 import torch
 import tqdm
-from sklearn.metrics import accuracy_score
 import torch.nn.functional as F
-
+import pandas as pd
+from sklearn.metrics import accuracy_score
 
 
 class Distr_AgentsDNN(VotingClassifier, VotingClass):
@@ -180,7 +181,7 @@ class Distr_AgentsDNN(VotingClassifier, VotingClass):
             current_agt.append(Predictions[current_agent])
             for diff_agent in range(self.Agents):
 
-                if acc_agent < acc_score[diff_agent]:
+                if acc_agent < self.acc_score[diff_agent]:
                     current_agt.append(Predictions[diff_agent])
 
             s = np.stack(current_agt)
