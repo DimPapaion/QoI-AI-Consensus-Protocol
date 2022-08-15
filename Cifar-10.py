@@ -1,5 +1,6 @@
-
 from Utils.utils import *
+from Utils.Plots import *
+from Utils.Config import *
 import argparse
 
 

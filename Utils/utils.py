@@ -2,7 +2,7 @@ import torch
 from sklearn.metrics import average_precision_score
 
 import Datasets.Datasets
-from Datasets import *
+
 
 def get_default_device():
   if torch.cuda.is_available():
