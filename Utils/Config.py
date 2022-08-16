@@ -14,11 +14,21 @@ def get_args_parser():
                         choices=['CIFAR10', 'CIFAR100','F-MNIST', 'MNIST','SVHN', 'STL-10'],
                         help="Name of the selected dataset.")
     parser.add_argument("--batch_size", type= int, default=16, help="Batch size for the DataLoader.")
-    parser.add_argument("--n_classes", type= int,default=10, help="Number of classes for the selected Dataset.")
+    parser.add_argument("--n_classes", type= int,default=10, help="Number of classes in the selected Dataset.")
+    parser.add_argument("--n_samples", type=int, default=10000, help="Number of samples in the selected Dataset.")
     parser.add_argument("--transform", type= bool, default=True, help="If augmentations should be applied in dataset.")
 
+    #Config Snythetic Dataset setup
+    parser.add_argument("--n_Synth_classes", type=int, default=10, help="Number of classes in the Synthetic Dataset.")
+    parser.add_argument("--n_Synth_samples", type=int, default=1000, help="Number of samples in the Synthetic Dataset.")
+    parser.add_argument("--n_classifiers", type=int, default=5,help="Number of classifiers.")
+    parser.add_argument("--conf_lvl", type=str, default='Medium', choices=['High', 'Medium', 'Low'],
+                        help="Level of confidiality of the predected results for each classifier.")
 
-    # Config Training
+
+
+    # Config Training setup
+    parser.add_argument("--n_models", type=int, default=6, help="Number of models")
     parser.add_argument("--is_trainable", type=bool, default=False, help="Training the Models")
     parser.add_argument("--epochs", type=int, default=1, help="Number of epochs")
     parser.add_argument("--optimizer", type=str, default='SGD', choices=['ADAM', 'SGD'],
@@ -47,6 +57,7 @@ def get_args_parser():
 
     #Config Faulty Test
     parser.add_argument("--add_faulty", type=bool, default=True, help="Set faulty agents")
+
 
     return parser
 

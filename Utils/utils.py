@@ -5,6 +5,7 @@ from Train_Test.DNN_Version.Individualized_Ensembling import *
 from Train_Test.DNN_Version.QoI_Consensus import *
 from Train_Test.Synthetic_Version.Individualized_Ens import *
 from Train_Test.Synthetic_Version.Consensus import *
+from Datasets.SyntheticDataset import *
 import Datasets.Datasets
 
 
@@ -46,6 +47,20 @@ def build_dataset(args):
   dataset = CD._load_Dataset()
   loaders = CD.make_loaders()
   return dataset, loaders
+
+
+
+def build_Synthetic_dataset(args):
+  data = SyntheticDataset_v3(args)
+  targets_OHE, target = data.generate_labels()
+
+  preds = data.construct_clf(args, max_percent=None)
+
+  m_preds = data.reform_preds_v3(preds, percent_start=0.78, step=0.21, percent_stop=0.92)
+
+  return m_preds, targets_OHE, target
+
+
 
 def get_optim(args, model):
   msg = "--optimizer  must be 'ADAM' or 'SGD' but got {} instead.".format(args.optimizer)
@@ -195,9 +210,9 @@ def build_Centralized_Ens_Synthetic(preds, targets, vote_pred):
 
   return
 
-def build_Individualized_Ensemble_Synthetic(args,preds,targets, weight ):
+def build_Individualized_Ensemble_Synthetic(args,agents, preds,targets, weight ):
   vote = VotingClass(preds=preds, targets=targets)
-  distr_vote = Individualized_Ens(Agents=args.agents)
+  distr_vote = Individualized_Ens(Agents=agents)
   Distr_Conf_NA = distr_vote.distr_Confid_agreement(Predictions=preds, targets=None, vote_type=args.indiv_vote_type,
                                                     decision_type=args.indiv_decision_type, acc=weight)
   acc_scoreC = vote.probs_(outputs=Distr_Conf_NA, targets=targets, return_="Acc", print_acc=True)

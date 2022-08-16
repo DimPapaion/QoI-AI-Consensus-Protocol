@@ -59,7 +59,8 @@ def main(args):
 
         build_Centralized_Ens_Synthetic(preds=preds_faulty, targets=targets, vote_pred=vote_f_pred)
 
-        preds_indiv_f, acc_score_indiv_f = build_Individualized_Ensemble_Synthetic(args, preds=preds_faulty,
+        preds_indiv_f, acc_score_indiv_f = build_Individualized_Ensemble_Synthetic(args,agents = args.n_models,
+                                                                                   preds=preds_faulty,
                                                                             targets=targets, weight=acc_f_score)
         preds_f_total = build_QoI_Consensus_Synthetic(args, preds = preds_faulty, targets = targets,
                                                       weights = acc_f_score)
