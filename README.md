@@ -1,1 +1,1 @@
-# QoI-AI-Consensus-Protocol
+# QoI-AI-Consensus
