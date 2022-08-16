@@ -32,7 +32,21 @@ def get_args_parser():
     parser.add_argument("--weights_isNone", type=bool, default=True,
                         help="Manually selected weights for Centralized Ensemble")
 
+    # Config Individualized Ensemble
+    parser.add_argument("--indiv_vote_type", type=str, default='Median', choices=['Average', 'Median','W_Average','W_Median'],
+                        help="Voting type for Aggregation step")
+    parser.add_argument("--indiv_decision_type", type=str, default='normal', choices=['normal', 'advance'],
+                        help="Decision type: 'normal' for the probability-based condition, 'advance' for the weighted-based condition.")
 
+    #Config QoI consensus
+
+    parser.add_argument("--QOI_vote", type=str, default='median', choices=['average', 'median'],
+                        help="Voting type for Aggregation step")
+    parser.add_argument("--QOI_decision", type=str, default='both', choices=['prob','weight', 'both'],
+                        help="Decision type: 'normal' for the probability-based condition, 'advance' for the weighted-based condition.")
+
+    #Config Faulty Test
+    parser.add_argument("--add_faulty", type=bool, default=True, help="Set faulty agents")
 
     return parser
 

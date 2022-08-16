@@ -1,8 +1,8 @@
 import numpy as np
-from Voting_Ensemble import *
+from Train_Test.Synthetic_Version.Voting_Ensemble import *
 
 
-class Distr_Agents(VotingClass):
+class Individualized_Ens(VotingClass):
 
     def __init__(self, Agents):
         self.Agents = Agents
@@ -31,7 +31,7 @@ class Distr_Agents(VotingClass):
             raise ValueError(msg)
         return prob
 
-    def distr_Confid_agreement(self, Predictions, targets, combine_type, decision_type, acc=None):
+    def distr_Confid_agreement(self, Predictions, targets, vote_type, decision_type, acc=None):
 
         self.Samples, self.Classes = self.matrix_shape(Predictions=Predictions)
         All_agent = np.zeros([self.Agents, self.Samples, self.Classes])
@@ -58,7 +58,7 @@ class Distr_Agents(VotingClass):
 
                     for diff_agent in range(self.Agents):
                         diff_conf = Predictions[diff_agent][sample][current_clas]
-                        if decision_type == "Normal":
+                        if decision_type == "normal":
                             if current_conf < diff_conf  :  # and acc_score[diff_agent] > np.average(acc_score):
                                 current_confs = np.vstack([current_confs, diff_conf])
                         else:
@@ -68,7 +68,7 @@ class Distr_Agents(VotingClass):
                             # current_confs.append(diff_conf)
 
                     # current_confs = np.stack(current_confs)
-                    decision_conf = self.combine_rule(probs=current_confs, targets=targets, vote_type=combine_type)
+                    decision_conf = self.combine_rule(probs=current_confs, targets=targets, vote_type=vote_type)
                     del current_confs
                     All_agent[current_agent][sample][current_clas] = decision_conf
 

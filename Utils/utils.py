@@ -1,8 +1,10 @@
 import torch
 from sklearn.metrics import average_precision_score
-from Train_Test.DNN_Version.BaseTraining import *
+from Train_Test.DNN_Version.BaseTraining import BaseClassifier, VotingClassifier
 from Train_Test.DNN_Version.Individualized_Ensembling import *
 from Train_Test.DNN_Version.QoI_Consensus import *
+from Train_Test.Synthetic_Version.Individualized_Ens import *
+from Train_Test.Synthetic_Version.Consensus import *
 import Datasets.Datasets
 
 
@@ -124,17 +126,89 @@ def build_Centralized_Ensemble(args, ModelParams, loaders, dataset):
 
 def build_Individualized_Ensemble(args, ModelParams, loaders, dataset, weights):
   device = get_default_device()
-  IndivEns = Individualized_EnsDNN(args, models=ModelParams, device=device,
-                               test_dl=loaders['Test_load'], dataset=dataset['Test'],
-                               targets=dataset['Test'].targets, weights=weights)
+  IndivEns = Individualized_EnsDNN(args, models=ModelParams, device = device,
+                               test_dl = loaders['Test_load'], dataset = dataset['Test'],
+                               targets = dataset['Test'].targets, weights=weights)
 
-  preds_all_NA, preds_NA, preds_all_OHE_NA = IndivEns.distr_agreement(vote="Average", decision="Confidence",
-                                                                       decision_type="normal",
+  preds_all_NA, preds_NA, preds_all_OHE_NA = IndivEns.distr_agreement(vote=args.indiv_vote_type, decision='Confidence',
+                                                                       decision_type=args.indiv_decision_type,
                                                                        centralized_aggregation=True,
                                                                        central_vote="weight_avg", return_OHE=True)
   return preds_all_NA, preds_NA, preds_all_OHE_NA
 
-def build_QoI_Consensus(args, acc_score, ):
+def build_QoI_Consensus(args,ModelParams, loaders, dataset, weights ):
+  device = get_default_device()
+  distr_cons3 = Distr_ConsensusDNN_v3(args, models=ModelParams, device = device,
+                               test_dl = loaders['Test_load'], dataset = dataset['Test'],
+                               targets = dataset['Test'].targets,  weights=weights)
+  preds_total, acc_ = distr_cons3.conpredict(vote=args.QOI_vote, decision=args.QOI_decision, decision_type="Normal")
+  return preds_total, acc_
 
-  distr_cons3 = Distr_ConsensusDNN_v3(Parameters=ParamsInf, weights=acc_score)
-  s, acc_ = distr_cons3.conpredict(vote="average", decision="both", decision_type="Normal")
+
+def build_Centralized_Inference_Synthetic(preds, targets):
+
+  vote = VotingClass(preds=preds, targets=targets)
+
+  vote_pred, vote_prob, acc_score = vote.probs_(outputs=preds, targets=targets, return_="All", print_acc=True)
+
+
+  return vote_pred, vote_prob, acc_score
+
+
+def build_Centralized_Ens_Synthetic(preds, targets, vote_pred):
+  vote = VotingClass(preds=preds, targets=targets)
+
+  vote_OHE_avg = vote.avg_rule()
+  preds_OHE_avg = np.array([np.argmax(vote_OHE_avg[i]) for i in range(len(vote_OHE_avg))])
+  print("Average : ", accuracy_score(targets, preds_OHE_avg))
+
+
+  vote_OHE_med = vote.median_rule()
+  preds_OHE_med = np.array([np.argmax(vote_OHE_med[i]) for i in range(len(vote_OHE_med))])
+  print("Median : ", accuracy_score(targets, preds_OHE_med))
+
+  vote_OHE_wMed = vote.weighted_median_rule()
+  preds_OHE_wMed = np.array([np.argmax(vote_OHE_wMed[i]) for i in range(len(vote_OHE_wMed))])
+  print("W_Median : ", accuracy_score(targets, preds_OHE_wMed))
+
+
+  vote_OHE_max = vote.max_rule()
+  preds_OHE_max = np.array([np.argmax(vote_OHE_max[i]) for i in range(len(vote_OHE_max))])
+  print("Max : ", accuracy_score(targets, preds_OHE_max))
+
+
+  vote_OHE_min = vote.min_rule()
+  preds_OHE_min = np.array([np.argmax(vote_OHE_min[i]) for i in range(len(vote_OHE_min))])
+  print("Min : ", accuracy_score(targets, preds_OHE_min))
+
+
+  vote_OHE_wAVG = vote.weight_avg_rule()
+  preds_OHE_wAVG = np.array([np.argmax(vote_OHE_wAVG[i]) for i in range(len(vote_OHE_wAVG))])
+  print("W_Average : ", accuracy_score(targets, preds_OHE_wAVG))
+
+  maj = np.apply_along_axis(
+    lambda x: np.argmax(np.bincount(x)),
+    axis=0,
+    arr=vote_pred,
+  )
+  print("Majority Voting: ", accuracy_score(maj, targets))
+
+  return
+
+def build_Individualized_Ensemble_Synthetic(args,preds,targets, weight ):
+  vote = VotingClass(preds=preds, targets=targets)
+  distr_vote = Individualized_Ens(Agents=args.agents)
+  Distr_Conf_NA = distr_vote.distr_Confid_agreement(Predictions=preds, targets=None, vote_type=args.indiv_vote_type,
+                                                    decision_type=args.indiv_decision_type, acc=weight)
+  acc_scoreC = vote.probs_(outputs=Distr_Conf_NA, targets=targets, return_="Acc", print_acc=True)
+  return Distr_Conf_NA, acc_scoreC
+
+def build_QoI_Consensus_Synthetic(args,preds,targets, weights ):
+  cons = QoI_Consensus_(predictions=preds, acc_score=weights)
+
+  All_samples = cons.consensus(decision=args.QOI_decision, decision_rule="Normal", vote_type=args.QOI_vote)
+  All_samples = np.stack(All_samples)
+  total = np.array([np.argmax(All_samples[i]) for i in range(len(All_samples))])
+
+  print("Distributed consensus Average Acc {:.2f}%".format(accuracy_score(targets, total) * 100))
+  return total

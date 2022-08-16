@@ -1,14 +1,18 @@
-from BaseTraining import *
+from Train_Test.DNN_Version.BaseTraining import VotingClassifier
 import random
 import numpy as np
 import torch
-import tqdm
+from tqdm import tqdm
 from sklearn.metrics import accuracy_score
 import torch.nn.functional as F
 
 class Distr_ConsensusDNN_v3(VotingClassifier):
-    def __init__(self, Parameters, weights=None):
-        super().__init__(Parameters)
+    def __init__(self, args, models, device,
+                               test_dl, dataset,
+                               targets, weights=None):
+        super().__init__(args, models, device,
+                               test_dl, dataset,
+                               targets)
         self.agents = len(self.Models)
         # self.leader = None
         self.sum_agents = (self.agents * (self.agents - 1)) / 2
@@ -299,7 +303,7 @@ class Distr_ConsensusDNN_v3(VotingClassifier):
         return self.final_preds
 
     def vote_type(self, outputs, weights=None, is_weight_norm=False):
-        msg = "Please select a valid argument for the vote parameter. Got {} but expected 'max', 'min', 'average', 'weight_avg' or 'median' instead.".format(
+        msg = "Please select a valid argument for the vote parameter. Got {} but expected  'average' or 'median' instead.".format(
             self.vote)
         if self.vote == "weight_avg":
             if self.weights_is_None:

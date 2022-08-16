@@ -3,7 +3,7 @@ from tqdm import tqdm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, classification_report, average_precision_score
 import numpy as np
 import gc
 import pandas as pd
@@ -195,10 +195,10 @@ class BaseClassifier(object):
 
 
 class VotingClassifier(BaseClassifier):
-    def __init__(self, args, test_dl, dataset, targets, models, device):
-        self.test_load = test_dl
+    def __init__(self, args, models, device, test_dl, dataset, targets):
         self.Models = models
         self.device = device
+        self.test_load = test_dl
         self.dataset = dataset
         self.targets = targets
         self.n_classes = args.n_classes
@@ -231,6 +231,7 @@ class VotingClassifier(BaseClassifier):
 
     def predict(self, dataset_name=None, target=None, return_acc=True):
         preds_total, acc_score, results = [], [], []
+        print("Models is", self.Models)
         for model in self.Models.keys():
             y_pred = np.empty((0, self.n_classes), float)
             y_true = np.empty((0, self.n_classes), float)

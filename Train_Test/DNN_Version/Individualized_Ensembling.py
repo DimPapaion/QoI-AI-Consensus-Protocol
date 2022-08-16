@@ -1,8 +1,8 @@
-from BaseTraining import VotingClassifier
+from Train_Test.DNN_Version.BaseTraining import VotingClassifier
 from Train_Test.Synthetic_Version.Voting_Ensemble import *
 import numpy as np
 import torch
-import tqdm
+from tqdm import tqdm
 import torch.nn.functional as F
 import pandas as pd
 from sklearn.metrics import accuracy_score
@@ -71,7 +71,7 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
         acc = 0.0
         results = []
         self.vote = vote
-        print("---- Distr Consensus is starting the testing process-----")
+        print("---- Individualized Ensembling is starting the testing process-----")
         with torch.no_grad():
             # model.eval()
             for img, label in tqdm(self.test_load):

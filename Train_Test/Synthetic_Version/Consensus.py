@@ -4,7 +4,7 @@ import random
 
 
 
-class Distr_Consensus_(object):
+class QoI_Consensus_(object):
     def __init__(self, predictions, acc_score):
         self.agents, self.samples, self.Classes = predictions.shape[0], predictions.shape[1], predictions.shape[2]
         self.predictions = predictions
@@ -284,10 +284,10 @@ class Distr_Consensus_(object):
             self.check_vote(sample = sample, decision = decision)
             self.check_prev_state(sample=sample)
 
-    def consensus(self, decision, decision_rule, decision_type):
+    def consensus(self, decision, decision_rule, vote_type):
         self.init_flags()
         self.leader = self.init_leader()
-        self.decision_type = decision_type
+        self.decision_type = vote_type
         self.decision_rule = decision_rule
 
 
