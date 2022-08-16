@@ -56,7 +56,7 @@ def get_args_parser():
                         help="Decision type: 'normal' for the probability-based condition, 'advance' for the weighted-based condition.")
 
     #Config Faulty Test
-    parser.add_argument("--add_faulty", type=bool, default=True, help="Set faulty agents")
+    parser.add_argument("--add_faulty", type=bool, default=False, help="Set faulty agents")
 
 
     return parser
