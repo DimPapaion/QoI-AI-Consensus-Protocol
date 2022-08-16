@@ -26,10 +26,21 @@ def main(args):
     else:
         preds_OHE, preds, results = build_Centralized_Inference(args, ModelParams=dictModels,
                                                                 loaders=loaders, dataset=dataset)
+        acc_score = results["Accuracy"].tolist()
+        targets = np.stack(dataset['Test'].targets)
+        pass
 
+    #Centralized Ensembling.
+
+    build_Centralized_Ensemble(args, ModelParams=dictModels,loaders=loaders, dataset=dataset)
+
+    #Individualized Ensembling.
+    preds_all_NA, preds_NA, preds_all_OHE_NA = build_Individualized_Ensemble(args,
+                                                                             ModelParams=dictModels,
+                                                                             loaders=loaders,
+                                                                             dataset=dataset, weights = acc_score)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Cifar-10 Test Set.", parents=[get_args_parser()])
     args = parser.parse_args()
-
     main(args)

@@ -1,6 +1,8 @@
 import torch
 from sklearn.metrics import average_precision_score
 from Train_Test.DNN_Version.BaseTraining import *
+from Train_Test.DNN_Version.Individualized_Ensembling import *
+from Train_Test.DNN_Version.QoI_Consensus import *
 import Datasets.Datasets
 
 
@@ -71,13 +73,68 @@ def build_Centralized_Inference(args, ModelParams, loaders, dataset ):
   inference = VotingClassifier(args, models = ModelParams, device = device,
                                test_dl=loaders['Test_load'], dataset = dataset['Test'],
                                targets = dataset['Test'].targets)
-  preds_total_C10, preds_C10, results_C10 = inference.predict()
+  preds_total_, preds_, results_ = inference.predict()
 
-  preds_total_C10 = np.stack(preds_total_C10)
-  acc_score = results_C10["Accuracy"].tolist()
-  targets = np.stack(dataset['Test'].targets)
-
-  return preds_total_C10, preds_C10, results_C10
+  preds_total_C10 = np.stack(preds_total_)
 
 
+  return preds_total_, preds_, results_
 
+def build_Centralized_Ensemble(args, ModelParams, loaders, dataset):
+  device = get_default_device()
+  inference = VotingClassifier(args, models=ModelParams, device=device,
+                               test_dl=loaders['Test_load'], dataset=dataset['Test'],
+                               targets=dataset['Test'].targets)
+
+  # Weight Median Aggregation Rule.
+  preds_OHE_wmed, med = inference.weight_med_predict(return_OHE=True)
+  preds_OHE_wmed = preds_OHE_wmed.T
+  vote_OHE_wMed = np.array([np.argmax(preds_OHE_wmed[i]) for i in range(len(preds_OHE_wmed))])
+  print("Weighted Median Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_wMed) * 100))
+
+  #Weight Average Aggregation Rule.
+  preds_OHE_wAVG = inference.weighted_avg_predict(vote="weight_avg", return_OHE=True)
+  vote_OHE_wAVG = np.array([np.argmax(preds_OHE_wAVG[i]) for i in range(len(preds_OHE_wAVG))])
+  print("Weighted Averege Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_wAVG) * 100))
+
+  #Average Aggregation Rule.
+  preds_OHE_avg = inference.weighted_avg_predict(weights=None, vote='average', return_OHE=True)
+  vote_OHE_avg = np.array([np.argmax(preds_OHE_avg[i]) for i in range(len(preds_OHE_avg))])
+  print("Average Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_avg) * 100))
+
+  # Median Aggregation Rule.
+  preds_OHE_med = inference.weighted_avg_predict(weights=None, vote='median', return_OHE=True)
+  vote_OHE_med = np.array([np.argmax(preds_OHE_med[i]) for i in range(len(preds_OHE_med))])
+  print("Median Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_med) * 100))
+
+  # Max Aggregation Rule.
+  preds_OHE_max = inference.weighted_avg_predict(weights=None, vote='max', return_OHE=True)
+  vote_OHE_max = np.array([np.argmax(preds_OHE_max[i]) for i in range(len(preds_OHE_max))])
+  print("Max Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_max) * 100))
+
+  # Min Aggregation Rule.
+  preds_OHE_min = inference.weighted_avg_predict(weights=None, vote='min', return_OHE=True)
+  vote_OHE_min = np.array([np.argmax(preds_OHE_min[i]) for i in range(len(preds_OHE_min))])
+  print("Min Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, vote_OHE_min) * 100))
+
+  #Majority Voting Aggregation Rule
+  preds_OHE_maj = inference.majority_voting_predict()
+  print("Majority Voting Acc {:.2f}%".format(accuracy_score(dataset['Test'].targets, preds_OHE_maj) * 100))
+  return
+
+def build_Individualized_Ensemble(args, ModelParams, loaders, dataset, weights):
+  device = get_default_device()
+  IndivEns = Individualized_EnsDNN(args, models=ModelParams, device=device,
+                               test_dl=loaders['Test_load'], dataset=dataset['Test'],
+                               targets=dataset['Test'].targets, weights=weights)
+
+  preds_all_NA, preds_NA, preds_all_OHE_NA = IndivEns.distr_agreement(vote="Average", decision="Confidence",
+                                                                       decision_type="normal",
+                                                                       centralized_aggregation=True,
+                                                                       central_vote="weight_avg", return_OHE=True)
+  return preds_all_NA, preds_NA, preds_all_OHE_NA
+
+def build_QoI_Consensus(args, acc_score, ):
+
+  distr_cons3 = Distr_ConsensusDNN_v3(Parameters=ParamsInf, weights=acc_score)
+  s, acc_ = distr_cons3.conpredict(vote="average", decision="both", decision_type="Normal")

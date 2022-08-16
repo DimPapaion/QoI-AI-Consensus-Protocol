@@ -8,10 +8,14 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 
 
-class Distr_AgentsDNN(VotingClassifier, VotingClass):
+class Individualized_EnsDNN(VotingClassifier, VotingClass):
 
-    def __init__(self, Parameters, weights=None):
-        super().__init__(Parameters)
+    def __init__(self, args, models, device,
+                               test_dl, dataset,
+                               targets, weights=None):
+        super().__init__(args, models, device,
+                               test_dl, dataset,
+                               targets)
         self.Agents = len(self.Models)
 
         if weights == None:

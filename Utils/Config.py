@@ -29,7 +29,7 @@ def get_args_parser():
     parser.add_argument("--check_point_path", type=str, default='./', help="Set check point saving path")
 
     #Config Centralized Inference
-    parser.add_argument("--weights_isNone", type=bool, default=False,
+    parser.add_argument("--weights_isNone", type=bool, default=True,
                         help="Manually selected weights for Centralized Ensemble")
 
 
@@ -49,8 +49,8 @@ def get_models(args):
     ParamsMod["Cifar10-Vgg16_bn"] = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_vgg16_bn", pretrained=True)
     ParamsMod["Cifar10-mobilenetv2_x0_5"] = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_mobilenetv2_x0_5", pretrained=True)
     ParamsMod["Cifar10-shufflenetv2_x0_5"] = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_shufflenetv2_x0_5", pretrained=True)
-    ParamsMod["Cifar10-repvgg_a1"] = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_repvgg_a1",
-                                                    pretrained=False)
+    #ParamsMod["Cifar10-repvgg_a1"] = torch.hub.load("chenyaofo/pytorch-cifar-models", "cifar10_repvgg_a1",
+                                                    #pretrained=False)
     return ParamsMod
   elif args.dataset_name == "CIFAR100":
     ParamsMod = dict()
