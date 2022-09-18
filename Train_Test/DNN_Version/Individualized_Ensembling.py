@@ -77,7 +77,7 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
             for img, label in tqdm(self.test_load):
 
                 img = img.to(self.device)
-                output = self.indiv_forward(img, decision, decision_type, vote, weights)
+                output, total_cost= self.indiv_forward(img, decision, decision_type, vote, weights)
                 if centralized_aggregation:
                     output1 = [F.softmax(torch.Tensor.float(output[i]), dim=1) for i in range(output.shape[0])]
                     output1 = torch.stack(output1)
@@ -104,7 +104,7 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
                     print("\n Classifier {} finished with accuracy of {:.2f}%".format(i,
                                                                                       accuracy_score(
                                                                                           np.array(self.targets),
-                                                                                          predic[i]) * 100))
+                                                                                          predic[i]) * 100), total_cost*100)
                     acc, pre, rec, f1, clasRep = self.calculate_metrics(y_true=np.array(self.targets),
                                                                         name=modelnames[i], y_pred=predic[i])
 
@@ -132,17 +132,19 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
 
             return y_pred, results
         else:
-            return predic, predic_cent, y_pred
+            return predic, predic_cent, y_pred, total_cost
 
     def distr_Confid_agreement(self, Predictions, targets, decision_type, combine_type):
 
         self.Samples, self.Classes = self.matrix_shape(Predictions=Predictions)
         final_preds = np.zeros([self.Agents, self.Samples, self.Classes])
+        total_cost=[]
         for agent in range(self.Agents):
 
             current_agent = agent
+            cost_per_sample=[]
             for sample in range(self.Samples):
-
+                cost_per_class=[]
                 for clas in range(self.Classes):
 
                     current_clas = clas
@@ -166,13 +168,15 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
                                 "Please insert a valid decision_type value. Got {} but expected 'normal' or 'advance'".format(
                                     decision_type))
                             # current_confs.append(diff_conf)
-
+                    cost_per_class.append((len(current_confs)-1)/self.Agents)
                     decision_conf = self.combine_rule(probs=current_confs, targets=targets, vote_type=combine_type,
                                                       axis=0)
                     del current_confs
                     final_preds[current_agent][sample][current_clas] = decision_conf
+                cost_per_sample.append(sum(cost_per_class)/self.Classes)
+            total_cost.append(sum(cost_per_sample)/self.Samples)
 
-        return final_preds
+        return final_preds, total_cost
 
     def distr_acc_Agreement(self, Predictions, targets, combine_type):
         All_agents = []

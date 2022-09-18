@@ -43,11 +43,13 @@ class Individualized_Ens(VotingClass):
 
             acc_score = acc
             print(acc_score)
+        total_cost = []
         for agent in range(self.Agents):
 
             current_agent = agent
+            cost_per_sample = []
             for sample in range(self.Samples):
-
+                cost_per_class=[]
                 for clas in range(self.Classes):
 
                     current_clas = clas
@@ -68,11 +70,14 @@ class Individualized_Ens(VotingClass):
                             # current_confs.append(diff_conf)
 
                     # current_confs = np.stack(current_confs)
+                    cost_per_class.append((len(current_confs)-1)/self.Agents)
                     decision_conf = self.combine_rule(probs=current_confs, targets=targets, vote_type=vote_type)
                     del current_confs
                     All_agent[current_agent][sample][current_clas] = decision_conf
+                cost_per_sample.append(sum(cost_per_class)/self.Classes)
+            total_cost.append(sum(cost_per_sample)/self.Samples)
 
-        return All_agent
+        return All_agent, total_cost
 
     def distr_acc_Agreement(self, Predictions, targets, combine_type):
         All_agents = []
