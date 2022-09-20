@@ -56,8 +56,8 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
 
         if decision == "Confidence":
             _preds = self.distr_Confid_agreement(Predictions = pred, targets = self.targets ,decision_type=decision_type, combine_type= vote)
-        elif decision == "Accuracy":
-            _preds = self.distr_acc_Agreement(Predictions = pred, targets = self.targets, combine_type= vote)
+        else:
+            raise ValueError("decision parameter is not valid.!")
         return torch.tensor(_preds)
 
 
@@ -178,25 +178,3 @@ class Individualized_EnsDNN(VotingClassifier, VotingClass):
 
         return final_preds, total_cost
 
-    def distr_acc_Agreement(self, Predictions, targets, combine_type):
-        All_agents = []
-
-        for agent in range(self.Agents):
-
-            current_agent = agent
-            acc_agent = self.acc_score[current_agent]
-            current_agt = []
-            current_agt.append(Predictions[current_agent])
-            for diff_agent in range(self.Agents):
-
-                if acc_agent < self.acc_score[diff_agent]:
-                    current_agt.append(Predictions[diff_agent])
-
-            s = np.stack(current_agt)
-
-            agent_decision = self.combine_rule(probs=s, targets=targets, vote_type=combine_type, axis=0)
-
-            All_agents.append(agent_decision)
-
-        All_agents = np.stack(All_agents)
-        return All_agents

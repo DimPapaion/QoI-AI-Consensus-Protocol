@@ -78,26 +78,3 @@ class Individualized_Ens(VotingClass):
             total_cost.append(sum(cost_per_sample)/self.Samples)
 
         return All_agent, total_cost
-
-    def distr_acc_Agreement(self, Predictions, targets, combine_type):
-        All_agents = []
-        acc_score = self.probs_(outputs=Predictions, targets=targets, return_="Acc")
-        for agent in range(self.Agents):
-
-            current_agent = agent
-            acc_agent = acc_score[current_agent]
-            current_agt = []
-            current_agt.append(Predictions[current_agent])
-            for diff_agent in range(self.Agents):
-
-                if acc_agent < acc_score[diff_agent]:
-                    current_agt.append(Predictions[diff_agent])
-
-            s = np.stack(current_agt)
-
-            agent_decision = self.combine_rule(probs=s, targets=targets, vote_type=combine_type, axis=0)
-
-            All_agents.append(agent_decision)
-
-        All_agents = np.stack(All_agents)
-        return All_agents

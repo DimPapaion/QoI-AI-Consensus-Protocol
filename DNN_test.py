@@ -14,11 +14,11 @@ def main(args):
     some_infos(loaders['Train_load'])
 
     # Dataset Visualization
-    #show_Image(args, dataset=dataset['Test'], num=123, preds=None)
+    show_Image(args, dataset=dataset['Test'], num=123, preds=None)
 
-    #show_dataset(args, dataset=dataset["Test"])
+    show_dataset(args, dataset=dataset["Test"])
 
-    #show_batch(loaders['Train_load'], batch_size=args.batch_size)
+    show_batch(loaders['Train_load'], batch_size=args.batch_size)
 
     dictModels = get_models(args)
     print(dictModels.keys())
@@ -38,10 +38,10 @@ def main(args):
                                                  dataset=dataset, weights=acc_score)
     #Centralized Ensembling.
 
-    #build_Centralized_Ensemble(args, ModelParams=dictModels,loaders=loaders, dataset=dataset)
+    build_Centralized_Ensemble(args, ModelParams=dictModels,loaders=loaders, dataset=dataset)
 
     #Individualized Ensembling.
-    preds_all_NA, preds_NA, preds_all_OHE_NA = build_Individualized_Ensemble(args,
+    preds_all_NA, preds_NA, preds_all_OHE_NA, total_cost = build_Individualized_Ensemble(args,
                                                                              ModelParams=dictModels,
                                                                              loaders=loaders,
                                                                              dataset=dataset, weights =acc_score)
