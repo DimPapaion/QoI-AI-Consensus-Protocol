@@ -27,6 +27,12 @@ python Synth_Test.py
 
 ![This is an image](./Results/IADA_Real.png)
 
-*Quality of Inference Method.
+* Quality of Inference Method.
 
 ![This is an image](./Results/QoI.png)
+
+# Author
+
+Feel free to send me a message for any issue.
+
+***Dimitrios Papaioannou (dnpapaion@gmail.gr)***
