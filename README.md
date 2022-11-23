@@ -20,7 +20,7 @@ python DNN_test.py
 # Synthetic Version testing.
 
 ```shell
-python Synth_Test.py
+python Synthetic_Test.py
 ```
 # Results.
 * IADA Method on Real Datasets.
