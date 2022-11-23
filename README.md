@@ -22,6 +22,11 @@ python DNN_test.py
 ```shell
 python Synth_Test.py
 ```
-#Results.
+# Results.
 * IADA Method on Real Datasets.
+
 ![This is an image](./Results/IADA_Real.png)
+
+*Quality of Inference Method.
+
+![This is an image](./Results/QoI.png)
