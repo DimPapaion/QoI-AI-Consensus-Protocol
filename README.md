@@ -10,3 +10,11 @@ This code was used to implement the experiments of my Master Thesis in Digital M
 
 # Datasets and Models.
 We tested our proposed methods in two type of datasets. Synthetics and Real. The real datasets are: Cifar-10/ Cifar-100/ F-Mnist/ SVHN and Stl-10. The used models are: ResNet 18/52, VGG 10/16, MobileNet, RepVGG, ShuffleNet, DesNet and so on. 
+
+# DNN Version testing.
+
+`python DNN_Test.py`
+
+# Synthetic Version testing.
+
+`python Synth_Test.py`
