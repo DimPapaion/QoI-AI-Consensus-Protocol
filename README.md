@@ -2,7 +2,7 @@
 
 This repository was created with the aim of incorporeting a Collaborative and Decentralized structure in a Multi-agent DNN inference scenario. Two methods are presented: an Individualized Agent Decision Aggregation (IADA) method and a Quality of Inference (QoI) censensus protocol. 
 
-Assuming that we operating in a multi-agent enviroment composed of $N$ agents, each one infer on its own 
+Assuming that we operating in a multi-agent enviroment composed of $N$ agents, each one infer on its own [^1]
 
 # Master Thesis
 
@@ -39,11 +39,7 @@ Feel free to send me a message for any issue.
 
 
 
-You can also use words, to fit your writing style more closely[^note].
+
 
 [^1]: Castro, Miguel. “Practical Byzantine fault tolerance.” USENIX Symposium on Operating Systems Design and Implementation (1999).
-[^2]: Every new line should be prefixed with 2 spaces.  
-  This allows you to have a footnote with multiple lines.
-[^note]:
-    Named footnotes will still render with numbers instead of the text but allow easier identification and linking.  
-    This footnote also has been made with a different syntax using 4 spaces for new lines.
+
