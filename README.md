@@ -24,3 +24,4 @@ python Synth_Test.py
 ```
 #Results.
 * IADA Method on Real Datasets.
+![This is an image](./Results/IADA_Real.png)
