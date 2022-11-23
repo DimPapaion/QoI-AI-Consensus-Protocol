@@ -13,8 +13,12 @@ We tested our proposed methods in two type of datasets. Synthetics and Real. The
 
 # DNN Version testing.
 
-`python DNN_Test.py`
+```shell
+python DNN_test.py
+```
 
 # Synthetic Version testing.
 
-`python Synth_Test.py`
+```shell
+python Synth_Test.py
+```
