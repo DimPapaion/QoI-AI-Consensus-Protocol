@@ -37,13 +37,11 @@ Feel free to send me a message for any issue.
 
 ***Dimitrios Papaioannou (dnpapaion@gmail.gr)***
 
-Here is a simple footnote[^1].
 
-A footnote can also have multiple lines[^2].  
 
 You can also use words, to fit your writing style more closely[^note].
 
-[^1]: References.
+[^1]: Castro, Miguel. “Practical Byzantine fault tolerance.” USENIX Symposium on Operating Systems Design and Implementation (1999).
 [^2]: Every new line should be prefixed with 2 spaces.  
   This allows you to have a footnote with multiple lines.
 [^note]:
