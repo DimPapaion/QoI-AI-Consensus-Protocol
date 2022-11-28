@@ -2,7 +2,7 @@
 
 This repository was created with the aim of incorporeting a Collaborative and Decentralized structure in a Multi-agent DNN inference scenario. Two methods are presented: an Individualized Agent Decision Aggregation (IADA) method and a Quality of Inference (QoI) censensus protocol. 
 
-Assuming that we operating in a multi-agent enviroment composed of $M$ agents, organized in a set $\mathcal{A} = \left\{ a_1,...,a_M\right\} $,  each one of them maintain a local pre-trained model of the form $f_i(x)$ and they attempt to achieve collaborative decentralized inference.   [^1]
+Assuming that we operating in a multi-agent enviroment composed of $M$ agents, organized in a set $\mathcal{A} = \left\{ a_1,\dots,a_M \right\} $,  each one of them maintain a local pre-trained model of the form $f_i(x)$ and they attempt to achieve collaborative decentralized inference.   [^1]
 
 # Master Thesis
 
