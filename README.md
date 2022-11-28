@@ -4,7 +4,7 @@ This repository was created with the aim of incorporeting a Collaborative and De
 
 Assuming that we operating in a multi-agent enviroment composed of $M$ agents,  each one of them maintain a local pre-trained model of the form $f_i(x)$ and they attempt to achieve collaborative decentralized inference. We assume that they communicating to each other under fixed communication links and the decision making process can be achieved:
 * **Individualized Agent Decision Aggregation (IADA) Method:** In IADA, each agent improve its individual performance by observing and deciding which neighboor agent is going to include in its final decision making process.
-* **__{Quality of Inference (QoI) Consensus Protocol:__** Agents are communicationg directly to each other in order tov reach a consensus about the predictions proposed by each sample, working thus as a single inference rule. [^1]
+* **__Quality of Inference (QoI) Consensus Protocol:__** Agents are communicationg directly to each other in order tov reach a consensus about the predictions proposed by each sample, working thus as a single inference rule. [^1]
 
 # Master Thesis
 
